@@ -1,0 +1,32 @@
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin button-base {
+  padding: $spacing-2 $spacing-4;
+  border-radius: $radius-md;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    ring: 2px;
+    ring-offset: 2px;
+  }
+}
+
+@mixin input-base {
+  width: 100%;
+  padding: $spacing-2 $spacing-3;
+  border: 1px solid $color-gray-300;
+  border-radius: $radius-md;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
+  }
+}

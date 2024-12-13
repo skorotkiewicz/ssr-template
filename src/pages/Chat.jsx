@@ -47,42 +47,39 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex flex-col h-[80vh] bg-white rounded-lg shadow">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div className="chat">
+      <div className="chat__messages">
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex ${
-              message.userId === userId ? "justify-end" : "justify-start"
+            className={`chat__messages-container ${
+              message.userId === userId ? "chat__messages-container--sent" : ""
             }`}
           >
             <div
-              className={`max-w-xs px-4 py-2 rounded-lg ${
+              className={`chat__messages-bubble ${
                 message.userId === userId
-                  ? "bg-indigo-600 text-white"
-                  : "bg-gray-100 text-gray-900"
+                  ? "chat__messages-bubble--sent"
+                  : "chat__messages-bubble--received"
               }`}
             >
-              <p className="text-sm font-medium">{message.user.name}</p>
+              <p className="chat__messages-name">{message.user.name}</p>
               <p>{message.content}</p>
             </div>
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={handleSubmit} className="p-4 border-t">
-        <div className="flex space-x-4">
+      <form onSubmit={handleSubmit} className="chat__form">
+        <div className="chat__form-container">
           <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            className="flex-1 rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+            className="chat__form-input"
             placeholder="Type your message..."
           />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
+          <button type="submit" className="chat__form-button">
             Send
           </button>
         </div>

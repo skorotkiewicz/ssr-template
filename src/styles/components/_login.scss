@@ -1,0 +1,51 @@
+@use "../abstracts" as *;
+
+.login {
+  @include flex-center;
+  min-height: 80vh;
+
+  &__container {
+    max-width: 28rem;
+    width: 100%;
+    padding: var(--spacing-8);
+    background-color: var(--color-white);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+  }
+
+  &__header {
+    text-align: center;
+
+    &-title {
+      font-size: 1.875rem;
+      font-weight: 800;
+      color: var(--color-gray-900);
+    }
+
+    &-subtitle {
+      margin-top: var(--spacing-2);
+      font-size: 0.875rem;
+      color: var(--color-gray-600);
+    }
+  }
+
+  &__form {
+    margin-top: var(--spacing-8);
+
+    &-input {
+      @include input-base;
+    }
+
+    &-button {
+      @include button-base;
+      width: 100%;
+      margin-top: var(--spacing-6);
+      background-color: var(--color-primary);
+      color: var(--color-white);
+
+      &:hover {
+        background-color: var(--color-primary-hover);
+      }
+    }
+  }
+}

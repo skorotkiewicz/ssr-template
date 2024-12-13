@@ -1,0 +1,47 @@
+@use "../abstracts" as *;
+
+.layout {
+  min-height: 100vh;
+  background-color: var(--color-gray-50);
+
+  &__nav {
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-sm);
+
+    &-container {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 var(--spacing-4);
+    }
+
+    &-content {
+      display: flex;
+      justify-content: space-between;
+      height: 4rem;
+    }
+
+    &-brand {
+      display: flex;
+      align-items: center;
+
+      &-icon {
+        height: 2rem;
+        width: 2rem;
+        color: var(--color-primary);
+      }
+
+      &-text {
+        margin-left: var(--spacing-2);
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--color-gray-900);
+      }
+    }
+  }
+
+  &__main {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: var(--spacing-6);
+  }
+}
