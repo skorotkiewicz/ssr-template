@@ -4,7 +4,7 @@ import { io } from "../socket.js";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
+router.get("/", async (_req, res) => {
   const messages = await prisma.message.findMany({
     include: { user: true },
     orderBy: { createdAt: "asc" },
