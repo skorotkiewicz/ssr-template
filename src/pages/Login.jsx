@@ -19,7 +19,7 @@ export default function Login() {
     });
 
     if (res && res.statusText === "OK") {
-      Cookies.set("userId", res.data.id);
+      Cookies.set("userId", res.data.id, { expires: 7 }); // 7 days
       navigate("/chat");
     }
   };
