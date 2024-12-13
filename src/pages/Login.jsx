@@ -24,23 +24,21 @@ export default function Login() {
 
   return (
     <div className="login">
-      <div className="login__container">
-        <div className="login__header">
-          <h2 className="login__header-title">Join the Chat</h2>
-          <p className="login__header-subtitle">
-            Enter your name to start chatting
-          </p>
+      <div className="container">
+        <div className="header">
+          <h2 className="header-title">Join the Chat</h2>
+          <p className="header-subtitle">Enter your name to start chatting</p>
         </div>
-        <form className="login__form" onSubmit={handleSubmit}>
+        <form className="form" onSubmit={handleSubmit}>
           <input
             type="text"
             required
-            className="login__form-input"
+            className="form-input"
             placeholder="Your name"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <button type="submit" className="login__form-button">
+          <button type="submit" className="form-button">
             Join Chat
           </button>
         </form>

@@ -48,38 +48,38 @@ export default function Chat() {
 
   return (
     <div className="chat">
-      <div className="chat__messages">
+      <div className="messages">
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`chat__messages-container ${
-              message.userId === userId ? "chat__messages-container--sent" : ""
+            className={`messages-container ${
+              message.userId === userId ? "messages-container--sent" : ""
             }`}
           >
             <div
-              className={`chat__messages-bubble ${
+              className={`messages-bubble ${
                 message.userId === userId
-                  ? "chat__messages-bubble--sent"
-                  : "chat__messages-bubble--received"
+                  ? "messages-bubble--sent"
+                  : "messages-bubble--received"
               }`}
             >
-              <p className="chat__messages-name">{message.user.name}</p>
+              <p className="messages-name">{message.user.name}</p>
               <p>{message.content}</p>
             </div>
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={handleSubmit} className="chat__form">
-        <div className="chat__form-container">
+      <form onSubmit={handleSubmit} className="form">
+        <div className="form-container">
           <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            className="chat__form-input"
+            className="form-input"
             placeholder="Type your message..."
           />
-          <button type="submit" className="chat__form-button">
+          <button type="submit" className="form-button">
             Send
           </button>
         </div>
