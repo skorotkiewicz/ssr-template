@@ -6,6 +6,12 @@ import Loading from "./components/Loading";
 const Chat = lazy(() => import("./pages/Chat"));
 const Login = lazy(() => import("./pages/Login"));
 
+// const Login = lazy(() => {
+//   return new Promise((resolve) => {
+//     setTimeout(() => resolve(import("./pages/Login")), 2000);
+//   });
+// });
+
 function App() {
   return (
     <Suspense fallback={<Loading />}>

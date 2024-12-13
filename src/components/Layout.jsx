@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { MessageSquare } from "lucide-react";
 
 export default function Layout() {
   return (
@@ -7,6 +8,7 @@ export default function Layout() {
         <div className="nav-container">
           <div className="nav-content">
             <div className="nav-brand">
+              <MessageSquare className="nav-brand-icon" />
               <span className="nav-brand-text">ChatStream</span>
             </div>
           </div>

@@ -18,6 +18,7 @@
     "compression": "^1.7.5",
     "express": "^4.21.2",
     "js-cookie": "^3.0.5",
+    "lucide-react": "^0.468.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.0.2",
