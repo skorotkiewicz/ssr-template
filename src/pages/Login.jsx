@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export default function Login() {
   const [name, setName] = useState("");
@@ -17,7 +18,7 @@ export default function Login() {
 
     if (response.ok) {
       const user = await response.json();
-      localStorage.setItem("userId", user.id);
+      Cookies.set("userId", user.id);
       navigate("/chat");
     }
   };

@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../utils/socket.js";
+import Cookies from "js-cookie";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
-  const userId = localStorage.getItem("userId");
+  const userId = Cookies.get("userId");
 
   useEffect(() => {
     if (!userId) {
