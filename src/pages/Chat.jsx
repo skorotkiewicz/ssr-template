@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { socket } from "../utils/socket.js";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { Forward } from "lucide-react";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -86,7 +87,7 @@ export default function Chat() {
             placeholder="Type your message..."
           />
           <button type="submit" className="form-button">
-            Send
+            <Forward />
           </button>
         </div>
       </form>
