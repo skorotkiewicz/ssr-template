@@ -33,7 +33,7 @@
       }
 
       &--received {
-        background-color: var(--color-gray-100);
+        background-color: var(--color-gray-300);
         color: var(--color-gray-900);
       }
     }
@@ -67,5 +67,30 @@
         background-color: var(--color-primary-hover);
       }
     }
+  }
+}
+
+.load-more-btn {
+  position: relative;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background-color: #4a90e2;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  margin-bottom: 20px;
+
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: #357abd; // Ciemniejszy niebieski
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
   }
 }

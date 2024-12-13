@@ -4,12 +4,25 @@ import { io } from "../socket.js";
 
 const router = Router();
 
-router.get("/", async (_req, res) => {
+router.get("/", async (req, res) => {
+  const page = Number.parseInt(req.query.page) || 1;
+  const limit = 30;
+  const offset = (page - 1) * limit;
+
   const messages = await prisma.message.findMany({
+    take: limit,
+    skip: offset,
     include: { user: true },
-    orderBy: { createdAt: "asc" },
+    orderBy: { createdAt: "desc" },
   });
-  res.json(messages);
+
+  const totalMessages = await prisma.message.count();
+
+  res.json({
+    messages: messages.reverse(),
+    hasMore: page * limit < totalMessages,
+    total: totalMessages,
+  });
 });
 
 router.post("/", async (req, res) => {

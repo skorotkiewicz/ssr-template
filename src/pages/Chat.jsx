@@ -3,31 +3,49 @@ import { useNavigate } from "react-router-dom";
 import { socket } from "../utils/socket.js";
 import Cookies from "js-cookie";
 import axios from "axios";
+import moment from "moment";
 import { Forward } from "lucide-react";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
   const userId = Cookies.get("userId");
 
-  useEffect(() => {
-    if (!userId) {
-      navigate("/");
-      return;
+  const fetchMessages = async () => {
+    if (loading || !hasMore) return;
+    setLoading(true);
+
+    try {
+      axios({
+        method: "get",
+        url: "/api/messages",
+        params: { page },
+      }).then((res) => {
+        setMessages((prevMessages) => [...res.data.messages, ...prevMessages]);
+        setHasMore(res.data.hasMore);
+        setPage((prevPage) => prevPage + 1);
+      });
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!userId) return navigate("/");
 
     socket.on("message", (message) => {
       setMessages((prev) => [...prev, message]);
     });
 
-    axios({
-      method: "get",
-      url: "/api/messages",
-    }).then((res) => {
-      setMessages(res.data);
-    });
+    fetchMessages();
 
     return () => {
       socket.disconnect();
@@ -56,6 +74,17 @@ export default function Chat() {
   return (
     <div className="chat">
       <div className="messages">
+        {hasMore && (
+          <button
+            type="button"
+            onClick={fetchMessages}
+            disabled={loading}
+            className="load-more-btn"
+          >
+            {loading ? "Loading..." : "Load more"}
+          </button>
+        )}
+
         {messages.map((message) => (
           <div
             key={message.id}
@@ -71,7 +100,10 @@ export default function Chat() {
               }`}
             >
               <p className="messages-name">{message.user.name}</p>
-              <p>{message.content}</p>
+              <p className="messages-content">{message.content}</p>
+              <small className="messages-createdAt">
+                {moment(message.createdAt).fromNow()}
+              </small>
             </div>
           </div>
         ))}
