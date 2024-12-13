@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../utils/socket.js";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -20,9 +21,12 @@ export default function Chat() {
       setMessages((prev) => [...prev, message]);
     });
 
-    fetch("/api/messages")
-      .then((res) => res.json())
-      .then(setMessages);
+    axios({
+      method: "get",
+      url: "/api/messages",
+    }).then((res) => {
+      setMessages(res.data);
+    });
 
     return () => {
       socket.disconnect();
@@ -38,10 +42,11 @@ export default function Chat() {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
-    await fetch("/api/messages", {
-      method: "POST",
+    axios({
+      method: "post",
+      url: "/api/messages",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: newMessage, userId }),
+      data: { content: newMessage, userId },
     });
 
     setNewMessage("");

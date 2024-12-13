@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 export default function Login() {
   const [name, setName] = useState("");
@@ -10,15 +11,15 @@ export default function Login() {
     e.preventDefault();
     if (!name.trim()) return;
 
-    const response = await fetch("/api/users", {
-      method: "POST",
+    const res = await axios({
+      method: "post",
+      url: "/api/users",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name }),
+      data: JSON.stringify({ name }),
     });
 
-    if (response.ok) {
-      const user = await response.json();
-      Cookies.set("userId", user.id);
+    if (res && res.statusText === "OK") {
+      Cookies.set("userId", res.data.id);
       navigate("/chat");
     }
   };
