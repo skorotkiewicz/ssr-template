@@ -1,5 +1,7 @@
 import fs from "node:fs/promises";
+import { Transform } from "node:stream";
 
+const ABORT_DELAY = 10000;
 let template;
 let render;
 
@@ -24,15 +26,47 @@ export async function handleRender(req, res, vite) {
       render = (await vite.ssrLoadModule("/src/entry-server.jsx")).render;
     }
 
-    const appHtml = render(url);
-    const html = template.replace("<!--ssr-outlet-->", appHtml);
+    let didError = false;
 
-    res.status(200).set({ "Content-Type": "text/html" }).end(html);
+    const { pipe, abort } = render(url, {
+      onShellError() {
+        res.status(500);
+        res.set({ "Content-Type": "text/html" });
+        res.send("<h1>Something went wrong</h1>");
+      },
+      onShellReady() {
+        res.status(didError ? 500 : 200);
+        res.set({ "Content-Type": "text/html" });
+
+        const transformStream = new Transform({
+          transform(chunk, encoding, callback) {
+            res.write(chunk, encoding);
+            callback();
+          },
+        });
+
+        const [htmlStart, htmlEnd] = template.split("<!--ssr-outlet-->");
+
+        res.write(htmlStart);
+
+        transformStream.on("finish", () => {
+          res.end(htmlEnd);
+        });
+
+        pipe(transformStream);
+      },
+      onError(error) {
+        didError = true;
+        console.error(error);
+      },
+    });
+
+    setTimeout(() => {
+      abort();
+    }, ABORT_DELAY);
   } catch (e) {
-    if (vite) {
-      vite.ssrFixStacktrace(e);
-    }
-    console.error(e);
+    vite?.ssrFixStacktrace(e);
+    console.error("Critical rendering error:", e);
     res.status(500).end(e.message);
   }
 }

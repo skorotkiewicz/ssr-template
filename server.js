@@ -24,18 +24,24 @@ async function createApp() {
 
   // Vite SSR setup
   const isProd = process.env.NODE_ENV === "production";
+  const base = process.env.BASE || "/";
   let vite;
 
   if (isProd) {
-    app.use(express.static("dist/client", { index: false }));
+    const compression = (await import("compression")).default;
+    const sirv = (await import("sirv")).default;
+    app.use(compression());
+    app.use(base, sirv("dist/client", { extensions: [] }));
+
     await setupViteProd();
   } else {
     vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "custom",
+      base,
     });
-    await setupViteDevServer(vite);
     app.use(vite.middlewares);
+    await setupViteDevServer(vite);
   }
 
   // Handle SSR
