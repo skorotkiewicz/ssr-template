@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../utils/socket.js";
 import Cookies from "js-cookie";
-import axios from "axios";
+import { api } from "../utils/trpc.js";
 import moment from "moment";
 import { Forward } from "lucide-react";
 
@@ -21,17 +21,13 @@ export default function Chat() {
     setLoading(true);
 
     try {
-      axios({
-        method: "get",
-        url: "/api/messages",
-        params: { page },
-      }).then((res) => {
-        setMessages((prevMessages) => [...res.data.messages, ...prevMessages]);
-        setHasMore(res.data.hasMore);
-        setPage((prevPage) => prevPage + 1);
-      });
+      const result = await api.messages.list.query({ page });
+
+      setMessages((prevMessages) => [...result.messages, ...prevMessages]);
+      setHasMore(result.hasMore);
+      setPage((prevPage) => prevPage + 1);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error fetching messages:", error);
     } finally {
       setLoading(false);
     }
@@ -61,14 +57,16 @@ export default function Chat() {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
-    axios({
-      method: "post",
-      url: "/api/messages",
-      headers: { "Content-Type": "application/json" },
-      data: { content: newMessage, userId },
-    });
+    try {
+      await api.messages.create.mutate({
+        content: newMessage,
+        userId,
+      });
 
-    setNewMessage("");
+      setNewMessage("");
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
   };
 
   return (

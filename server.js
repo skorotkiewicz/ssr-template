@@ -2,7 +2,7 @@ import express from "express";
 import { createServer } from "node:http";
 import { createServer as createViteServer } from "vite";
 import { initializeSocket } from "./src/server/socket.js";
-import apiRouter from "./src/server/api/index.js";
+import { trpcExpressMiddleware } from "./src/server/api/trpcExpressMiddleware.js";
 import {
   setupViteDevServer,
   setupViteProd,
@@ -19,8 +19,8 @@ async function createApp() {
   // Middleware
   app.use(express.json());
 
-  // API Routes
-  app.use("/api", apiRouter);
+  // tRPC API Routes
+  app.use("/api/trpc", trpcExpressMiddleware);
 
   // Vite SSR setup
   const isProd = process.env.NODE_ENV === "production";

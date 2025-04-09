@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import axios from "axios";
+import { api } from "../utils/trpc.js";
 
 export default function Login() {
   const [name, setName] = useState("");
@@ -11,16 +11,15 @@ export default function Login() {
     e.preventDefault();
     if (!name.trim()) return;
 
-    const res = await axios({
-      method: "post",
-      url: "/api/users",
-      headers: { "Content-Type": "application/json" },
-      data: JSON.stringify({ name }),
-    });
+    try {
+      const user = await api.users.create.mutate({ name });
 
-    if (res && res.statusText === "OK") {
-      Cookies.set("userId", res.data.id, { expires: 7 }); // 7 days
-      navigate("/chat");
+      if (user?.id) {
+        Cookies.set("userId", user.id, { expires: 7 }); // 7 days
+        navigate("/chat");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
     }
   };
 
