@@ -7,13 +7,31 @@ export const t = initTRPC.create();
 
 export const router = t.router;
 export const publicProcedure = t.procedure;
+export const privateProcedure = t.procedure.use(async ({ ctx, next }) => {
+  // Middleware to check authentication
+  if (!ctx?.userId) throw new Error("Not authenticated");
+
+  const user = await prisma.user.findFirst({
+    where: { id: ctx.userId ?? null },
+  });
+
+  if (!user) throw new Error("User not found");
+
+  return next({ ctx: { ...ctx, user } });
+
+  // return next({ ctx });
+});
 
 // Create tRPC router
 export const appRouter = router({
   // Users router
   users: router({
     create: publicProcedure
-      .input(z.object({ name: z.string() }))
+      .input(
+        z.object({
+          name: z.string(),
+        }),
+      )
       .mutation(async ({ input }) => {
         const user = await prisma.user.create({
           data: { name: input.name },
@@ -24,14 +42,14 @@ export const appRouter = router({
 
   // Messages router
   messages: router({
-    list: publicProcedure
+    list: privateProcedure
       .input(
         z.object({
           page: z.number().default(1),
           limit: z.number().default(30),
         }),
       )
-      .query(async ({ input }) => {
+      .query(async ({ input, ctx }) => {
         const { page, limit } = input;
         const offset = (page - 1) * limit;
 
@@ -51,16 +69,18 @@ export const appRouter = router({
         };
       }),
 
-    create: publicProcedure
+    create: privateProcedure
       .input(
         z.object({
           content: z.string(),
           userId: z.string(),
         }),
       )
-      .mutation(async ({ input }) => {
+      .mutation(async ({ input, ctx }) => {
         const message = await prisma.message.create({
-          data: { content: input.content, userId: input.userId },
+          // data: { content: input.content, userId: ctx.userId },
+          data: { content: input.content, userId: ctx.user.id },
+          // data: { content: input.content, userId: input.userId },
           include: { user: true },
         });
 

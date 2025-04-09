@@ -22,4 +22,3 @@ dist-ssr
 *.sw?
 
 prisma/dev.db
-.jj
