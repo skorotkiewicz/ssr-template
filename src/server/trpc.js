@@ -78,9 +78,9 @@ export const appRouter = router({
       )
       .mutation(async ({ input, ctx }) => {
         const message = await prisma.message.create({
-          // data: { content: input.content, userId: ctx.userId },
-          data: { content: input.content, userId: ctx.user.id },
-          // data: { content: input.content, userId: input.userId },
+          // data: { content: input.content, userId: ctx.userId }, // ctx.userId is from ctx
+          data: { content: input.content, userId: ctx.user.id }, // ctx.user.id is from the prisma
+          // data: { content: input.content, userId: input.userId }, // input.userId is from the input
           include: { user: true },
         });
 
